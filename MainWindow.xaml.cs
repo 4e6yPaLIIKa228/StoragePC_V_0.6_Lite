@@ -280,23 +280,26 @@ namespace YchetPer
                 //var idkab = TbNumKab.SelectedValuePath = " ";
                 var idcon = CbCondition.Text;
                 var startWork = StartWork.Text;
-                var Idi = TbID.Text;
+                var ID = TbID.Text;
                 connection.Open();
 
-                string query = $@"UPDATE Devices SET (IDType, IDKabuneta, Title, Number, IDCondition, StartWork WHERE ID) values ('{id}',{id2},'{name}','{number}','{id3}','{startWork}','{Idi}');";
+                //string query = $@"UPDATE Devices SET (IDType, IDKabuneta, Title, Number, IDCondition, StartWork WHERE ID) values ('{id}',{id2},'{name}','{number}','{id3}','{startWork}','{Idi}');";
+                string query = $@"UPDATE Devices SET IDType=@IDType, IDKabuneta=@IDKabuneta, Title=@Title, Number=@Number, IDCondition=@IDCondition, StartWork=@StartWork WHERE ID=@ID;";
                 SQLiteCommand cmd = new SQLiteCommand(query, connection);
                 try
                 {
-                    //cmd.Parameters.AddWithValue("@IDType","ID");
-                    //cmd.Parameters.AddWithValue("@IDKabuneta", "ID");
-                    //cmd.Parameters.AddWithValue("@Title", TbTitle.Text);
-                    //cmd.Parameters.AddWithValue("@Number", TbNumber.Text);
-                    //cmd.Parameters.AddWithValue("@IDCondition", "ID");
+                    cmd.Parameters.AddWithValue("@IDType", id);
+                    cmd.Parameters.AddWithValue("@IDKabuneta", id2);
+                    cmd.Parameters.AddWithValue("@Title", name);
+                    cmd.Parameters.AddWithValue("@Number", number);
+                    cmd.Parameters.AddWithValue("@IDCondition", id3);
+                    cmd.Parameters.AddWithValue("@StartWork", startWork);
+                    cmd.Parameters.AddWithValue("@ID", ID);
                     //cmd.Parameters.AddWithValue("@Post", );
                     //cmd.Parameters.AddWithValue("@Stat", );
                     cmd.ExecuteNonQuery();
                     MessageBox.Show("+");
-                    this.Close();
+                    UpdateDG();
 
                 }
 
