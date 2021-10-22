@@ -32,7 +32,9 @@ namespace YchetPer
 
         private void BtnBack_Click(object sender, RoutedEventArgs e)
         {
+            CbFill();
             this.Close();
+
         }
         public void CbFill()  //Данные для комбобоксов 
         {
@@ -96,7 +98,14 @@ namespace YchetPer
         {
             using (SQLiteConnection connection = new SQLiteConnection(DBConnection.myConn))
             {
-                int id,id2,id3;
+                connection.Open();
+                if (String.IsNullOrEmpty(TbTitle.Text) || String.IsNullOrEmpty(TbNumber.Text) || String.IsNullOrEmpty(StartWork.Text) || String.IsNullOrEmpty(CbClass.Text) || TbNumKab.SelectedIndex == -1 || CbCondition.SelectedIndex == -1)
+                {
+                    MessageBox.Show("Заполните все поля", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                else
+                {
+                    int id, id2, id3;
                 bool resultClass = int.TryParse(CbClass.SelectedValue.ToString(), out id);
                 bool resultKab = int.TryParse(TbNumKab.SelectedValue.ToString(), out id2);
                 bool resultCon = int.TryParse(CbCondition.SelectedValue.ToString(), out id3);
@@ -107,27 +116,70 @@ namespace YchetPer
                 var idkab = TbNumKab.SelectedValuePath = " ";
                 var idcon = CbCondition.Text;
                 var startWork = StartWork.Text;
-                connection.Open();
-                string query = $@"INSERT INTO Devices(IDType,IDKabuneta,Title,Number,IDCondition,StartWork) values ('{id}',{id2},'{name}','{number}','{id3}','{startWork}');";
-                SQLiteCommand cmd = new SQLiteCommand(query, connection);
-                try
-                {
-                    //cmd.Parameters.AddWithValue("@IDType","ID");
-                    //cmd.Parameters.AddWithValue("@IDKabuneta", "ID");
-                    //cmd.Parameters.AddWithValue("@Title", TbTitle.Text);
-                    //cmd.Parameters.AddWithValue("@Number", TbNumber.Text);
-                    //cmd.Parameters.AddWithValue("@IDCondition", "ID");
-                    //cmd.Parameters.AddWithValue("@Post", );
-                    //cmd.Parameters.AddWithValue("@Stat", );
-                   cmd.ExecuteNonQuery();
-                    MessageBox.Show("+");
-                    this.Close();
 
+              
+                    string query = $@"INSERT INTO Devices(IDType,IDKabuneta,Title,Number,IDCondition,StartWork) values ('{id}',{id2},'{name}','{number}','{id3}','{startWork}');";
+                    SQLiteCommand cmd = new SQLiteCommand(query, connection);
+                    try
+                    {
+                        //cmd.Parameters.AddWithValue("@IDType","ID");
+                        //cmd.Parameters.AddWithValue("@IDKabuneta", "ID");
+                        //cmd.Parameters.AddWithValue("@Title", TbTitle.Text);
+                        //cmd.Parameters.AddWithValue("@Number", TbNumber.Text);
+                        //cmd.Parameters.AddWithValue("@IDCondition", "ID");
+                        cmd.ExecuteNonQuery();
+                        MessageBox.Show("+");
+                        this.Close();
+
+                    }
+
+                    catch (SQLiteException ex)
+                    {
+                        MessageBox.Show("Error: " + ex.Message);
+                    }
                 }
+            }
+        }
 
-                catch (SQLiteException ex)
+        private void BtnAddKab_Click(object sender, RoutedEventArgs e)
+        {
+            Eddit Edd = new Eddit();
+            Edd.Owner = this;
+            Edd.ShowDialog();
+            CbFill();
+        }
+
+        private void BtnDellKab_Click(object sender, RoutedEventArgs e)
+        {
+            Delete();
+            CbFill();
+        }
+        public void Delete()
+        {
+            using (SQLiteConnection connection = new SQLiteConnection(DBConnection.myConn))
+            {
+                int ID;
+                connection.Open();
+                if (TbNumKab.SelectedIndex == -1)
                 {
-                    MessageBox.Show("Error: " + ex.Message);
+                    MessageBox.Show("Выберите какой кабинет нужно удалить!!!!!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                else
+                {
+                    bool NamePost = int.TryParse(TbNumKab.SelectedValue.ToString(), out ID);
+                    try
+                    {
+                        string query1 = $@"DELETE FROM NumberKabs WHERE id = '{ID}'";
+                        connection.Open();
+                        SQLiteCommand cmd1 = new SQLiteCommand(query1, connection);
+                        DataTable DT = new DataTable("NumberKabs");
+                        cmd1.ExecuteNonQuery();
+                    }
+                    catch (Exception exp)
+                    {
+                        MessageBox.Show(exp.Message);
+                    }
+
                 }
             }
         }

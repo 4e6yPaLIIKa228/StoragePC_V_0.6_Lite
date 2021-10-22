@@ -19,8 +19,8 @@
             </DataGrid.Columns>
         </DataGrid>
         <Button x:Name="BtnAdd" Content="Добавить" HorizontalAlignment="Left" Margin="10,392,0,0" VerticalAlignment="Top" Height="32" Width="93" Click="BtnAdd_Click"/>
-        <Button x:Name="BtnUpd" Content="Обновить" HorizontalAlignment="Left" Margin="206,392,0,0" VerticalAlignment="Top" Height="32" Width="93" Click="BtnUpd_Click"/>
-        <Button x:Name="BtnDel" Content="Удалить" HorizontalAlignment="Left" Margin="304,392,0,0" VerticalAlignment="Top" Height="32" Width="93" Click="BtnDel_Click" />
+        <Button x:Name="BtnUpd" Content="Обновить" HorizontalAlignment="Left" Margin="120,392,0,0" VerticalAlignment="Top" Height="32" Width="93" Click="BtnUpd_Click"/>
+        <Button x:Name="BtnDel" Content="Удалить" HorizontalAlignment="Left" Margin="240,392,0,0" VerticalAlignment="Top" Height="32" Width="93" Click="BtnDel_Click" />
         <!--<Button x:Name="BtnEdd" Content="Изменить" HorizontalAlignment="Left" Margin="108,392,0,0" VerticalAlignment="Top" Height="32" Width="93" Click="BtnEdd_Click"/>-->
 
 

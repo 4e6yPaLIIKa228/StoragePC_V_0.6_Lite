@@ -37,6 +37,7 @@ namespace YchetPer
             DGAllEmp.Columns[4].IsReadOnly = true;
             DGAllEmp.Columns[5].IsReadOnly = true;
             DGAllEmp.Columns[6].IsReadOnly = true;
+            BtnEdd.IsEnabled = false;
             //DGAllEmp.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             //DGAllEmp.AllowUserToAddRows = false;
 
@@ -187,6 +188,7 @@ namespace YchetPer
         private void DGAllEmp_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             CbFill();
+            BtnEdd.IsEnabled = true;
             using (SQLiteConnection connection = new SQLiteConnection(DBConnection.myConn))
             {
                 if (DGAllEmp.SelectedItems.Count > 0)
@@ -265,47 +267,53 @@ namespace YchetPer
             }
         }
 
-        private void BtnEdd_Click(object sender, RoutedEventArgs e)
+        private void BtnEdd_Click(object sender, RoutedEventArgs e) //Изменение
         {
-            using (SQLiteConnection connection = new SQLiteConnection(DBConnection.myConn))
+            if (TbID.Text == null)
             {
-                int id, id2, id3;
-                bool resultClass = int.TryParse(CbClass.SelectedValue.ToString(), out id);
-                bool resultKab = int.TryParse(TbNumKab.SelectedValue.ToString(), out id2);
-                bool resultCon = int.TryParse(CbCondition.SelectedValue.ToString(), out id3);
-                var name = TbTitle.Text;
-                var numkab = TbNumber.Text;
-                var number = TbNumber.Text;
-                var idtype = CbClass.Text;
-                //var idkab = TbNumKab.SelectedValuePath = " ";
-                var idcon = CbCondition.Text;
-                var startWork = StartWork.Text;
-                var ID = TbID.Text;
-                connection.Open();
-
-                //string query = $@"UPDATE Devices SET (IDType, IDKabuneta, Title, Number, IDCondition, StartWork WHERE ID) values ('{id}',{id2},'{name}','{number}','{id3}','{startWork}','{Idi}');";
-                string query = $@"UPDATE Devices SET IDType=@IDType, IDKabuneta=@IDKabuneta, Title=@Title, Number=@Number, IDCondition=@IDCondition, StartWork=@StartWork WHERE ID=@ID;";
-                SQLiteCommand cmd = new SQLiteCommand(query, connection);
-                try
+                MessageBox.Show("Выберите в таблице строку изменения!!!!!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                BtnEdd.IsEnabled = false;
+            }
+            else
+            {
+                using (SQLiteConnection connection = new SQLiteConnection(DBConnection.myConn))
                 {
-                    cmd.Parameters.AddWithValue("@IDType", id);
-                    cmd.Parameters.AddWithValue("@IDKabuneta", id2);
-                    cmd.Parameters.AddWithValue("@Title", name);
-                    cmd.Parameters.AddWithValue("@Number", number);
-                    cmd.Parameters.AddWithValue("@IDCondition", id3);
-                    cmd.Parameters.AddWithValue("@StartWork", startWork);
-                    cmd.Parameters.AddWithValue("@ID", ID);
-                    //cmd.Parameters.AddWithValue("@Post", );
-                    //cmd.Parameters.AddWithValue("@Stat", );
-                    cmd.ExecuteNonQuery();
-                    MessageBox.Show("+");
-                    UpdateDG();
+                    int id, id2, id3;
+                    bool resultClass = int.TryParse(CbClass.SelectedValue.ToString(), out id);
+                    bool resultKab = int.TryParse(TbNumKab.SelectedValue.ToString(), out id2);
+                    bool resultCon = int.TryParse(CbCondition.SelectedValue.ToString(), out id3);
+                    var name = TbTitle.Text;
+                    var numkab = TbNumber.Text;
+                    var number = TbNumber.Text;
+                    var idtype = CbClass.Text;
+                    //var idkab = TbNumKab.SelectedValuePath = " ";
+                    var idcon = CbCondition.Text;
+                    var startWork = StartWork.Text;
+                    var ID = TbID.Text;
+                    connection.Open();
 
-                }
+                    //string query = $@"UPDATE Devices SET (IDType, IDKabuneta, Title, Number, IDCondition, StartWork WHERE ID) values ('{id}',{id2},'{name}','{number}','{id3}','{startWork}','{Idi}');";
+                    string query = $@"UPDATE Devices SET IDType=@IDType, IDKabuneta=@IDKabuneta, Title=@Title, Number=@Number, IDCondition=@IDCondition, StartWork=@StartWork WHERE ID=@ID;";
+                    SQLiteCommand cmd = new SQLiteCommand(query, connection);
+                    try
+                    {
+                        cmd.Parameters.AddWithValue("@IDType", id);
+                        cmd.Parameters.AddWithValue("@IDKabuneta", id2);
+                        cmd.Parameters.AddWithValue("@Title", name);
+                        cmd.Parameters.AddWithValue("@Number", number);
+                        cmd.Parameters.AddWithValue("@IDCondition", id3);
+                        cmd.Parameters.AddWithValue("@StartWork", startWork);
+                        cmd.Parameters.AddWithValue("@ID", ID);
+                        cmd.ExecuteNonQuery();
+                        MessageBox.Show("Данные изменены");
+                        UpdateDG();
 
-                catch (SQLiteException ex)
-                {
-                    MessageBox.Show("Error: " + ex.Message);
+                    }
+
+                    catch (SQLiteException ex)
+                    {
+                        MessageBox.Show("Error: " + ex.Message);
+                    }
                 }
             }
         }

@@ -10,8 +10,11 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
-
+using System.Data.SQLite;
+using YchetPer.Connection;
+using System.Data;
 namespace YchetPer
 {
     /// <summary>
@@ -23,5 +26,35 @@ namespace YchetPer
         {
             InitializeComponent();
         }
+
+        private void BtnAdd_Click(object sender, RoutedEventArgs e)
+        {
+            using (SQLiteConnection connection = new SQLiteConnection(DBConnection.myConn))
+            {
+
+                if (String.IsNullOrEmpty(TbKab.Text))
+                {
+                    MessageBox.Show("Заполните поле", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                else
+                {
+                    connection.Open();
+                    string query = $@"INSERT INTO NumberKabs('NumKab') values (@NumKab)";
+                    SQLiteCommand cmd = new SQLiteCommand(query, connection);
+                    try
+                    {
+                        cmd.Parameters.AddWithValue("@NumKab", TbKab.Text);
+                        cmd.ExecuteNonQuery();
+                        this.Close();
+                    }
+                    catch (SQLiteException ex)
+                    {
+                        MessageBox.Show("Error: " + ex.Message);
+                    }
+                }
+
+            }
+        }
+         
     }
 }
